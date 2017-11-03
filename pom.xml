@@ -24,6 +24,10 @@
 		<azure.version>0.2.0</azure.version>
 		<java.version>1.8</java.version>
 		<vaadin.version>8.1.0</vaadin.version>
+		<docker.image.prefix>eghregistry.azurecr.io</docker.image.prefix>
+		<azure.app.name>egh-${maven.build.timestamp}</azure.app.name>
+		<plugin.spotify.version>0.4.11</plugin.spotify.version>
+		<plugin.azure.webapp.version>0.1.3</plugin.azure.webapp.version>
 	</properties>
 
 	<dependencies>
@@ -92,6 +96,52 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+			<groupId>com.spotify</groupId>
+			<artifactId>docker-maven-plugin</artifactId>
+			<version>${plugin.spotify.version}</version>
+				<configuration>
+					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+					<imageTags>
+						<imageTag>${project.version}</imageTag>
+					</imageTags>
+					<baseImage>java</baseImage>
+					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+					<registryUrl>https://${docker.image.prefix}</registryUrl>
+					<serverId>${docker.image.prefix}</serverId>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>${plugin.azure.webapp.version}</version>
+				<configuration>
+					<resourceGroup>java-on-azure</resourceGroup>
+					<appName>${azure.app.name}</appName>
+					<region>westus</region>
+					<pricingTier>s1</pricingTier>
+					<containerSettings>
+						<imageName>${docker.image.prefix}/${project.artifactId}:${project.version}</imageName>
+						<registryUrl>https://${docker.image.prefix}</registryUrl>
+						<serverId>${docker.image.prefix}</serverId>
+					</containerSettings>
+					<appSettings>
+						<property>
+							<name>PORT</name>
+							<value>8080</value>
+						</property>
+					</appSettings>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
