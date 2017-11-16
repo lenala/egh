@@ -1,52 +1,56 @@
 package com.microsoft.egh.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
+@Table(name = "Dailyinput")
 public class ClientFact {
 
 	@Id
-	@GeneratedValue
-	private Long id;
+	@Column(name = "clientid")
+	private Integer clientId;
 
-	private String firstName;
+	private Date date;
 
-	private String lastName;
+	private boolean breakfast;
 
-	protected ClientFact() {
+	public ClientFact() {
 	}
 
-	public ClientFact(String firstName, String lastName) {
-		this.firstName = firstName;
-		this.lastName = lastName;
+	public Integer getClientId() {
+		return clientId;
 	}
 
-	public Long getId() {
-		return id;
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public boolean isBreakfast() {
+		return breakfast;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setBreakfast(boolean breakfast) {
+		this.breakfast = breakfast;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("ClientFact[id=%d, firstName='%s', lastName='%s']", id,
-				firstName, lastName);
+		return super.toString();
+//				String.format("ClientFact[id=%d, firstName='%s', lastName='%s']", id,
+//				firstName, lastName);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.microsoft.egh.ui;
 
+import com.microsoft.egh.model.ClientDemographic;
+import com.microsoft.egh.model.ClientDemographicRepository;
 import com.microsoft.egh.model.ClientFact;
 import com.microsoft.egh.model.ClientFactRepository;
 import com.vaadin.data.Binder;
@@ -27,12 +29,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 @UIScope
 public class ClientFactEditor extends VerticalLayout {
 
-	private final ClientFactRepository repository;
+	private final ClientDemographicRepository repository;
 
 	/**
 	 * The currently edited clientFact
 	 */
-	private ClientFact clientFact;
+	private ClientDemographic clientDemographic;
 
 	/* Fields to edit properties in ClientFact entity */
 	TextField firstName = new TextField("First name");
@@ -44,10 +46,10 @@ public class ClientFactEditor extends VerticalLayout {
 	Button delete = new Button("Delete", FontAwesome.TRASH_O);
 	CssLayout actions = new CssLayout(save, cancel, delete);
 
-	Binder<ClientFact> binder = new Binder<>(ClientFact.class);
+	Binder<ClientDemographic> binder = new Binder<>(ClientDemographic.class);
 
 	@Autowired
-	public ClientFactEditor(ClientFactRepository repository) {
+	public ClientFactEditor(ClientDemographicRepository repository) {
 		this.repository = repository;
 
 		addComponents(firstName, lastName, actions);
@@ -62,9 +64,9 @@ public class ClientFactEditor extends VerticalLayout {
 		save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
 		// wire action buttons to save, delete and reset
-		save.addClickListener(e -> repository.save(clientFact));
-		delete.addClickListener(e -> repository.delete(clientFact));
-		cancel.addClickListener(e -> editCustomer(clientFact));
+		save.addClickListener(e -> repository.save(clientDemographic));
+		delete.addClickListener(e -> repository.delete(clientDemographic));
+		cancel.addClickListener(e -> editCustomer(clientDemographic));
 		setVisible(false);
 	}
 
@@ -73,7 +75,7 @@ public class ClientFactEditor extends VerticalLayout {
 		void onChange();
 	}
 
-	public final void editCustomer(ClientFact c) {
+	public final void editCustomer(ClientDemographic c) {
 		if (c == null) {
 			setVisible(false);
 			return;
@@ -81,17 +83,17 @@ public class ClientFactEditor extends VerticalLayout {
 		final boolean persisted = c.getId() != null;
 		if (persisted) {
 			// Find fresh entity for editing
-			clientFact = repository.findOne(c.getId());
+			clientDemographic = repository.findOne(c.getId());
 		}
 		else {
-			clientFact = c;
+			clientDemographic = c;
 		}
 		cancel.setVisible(persisted);
 
 		// Bind clientFact properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
-		binder.setBean(clientFact);
+		binder.setBean(clientDemographic);
 
 		setVisible(true);
 

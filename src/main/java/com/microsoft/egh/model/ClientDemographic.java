@@ -1,29 +1,39 @@
 package com.microsoft.egh.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
+@Table(name = "Clientdemographic")
 public class ClientDemographic {
     @Id
-    @GeneratedValue
-    private Long id;
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "clientid")
+    private Integer id;
+    @Column(name = "firstname")
     private String firstName;
-
+    @Column(name = "lastname")
     private String lastName;
-
+    @Column(name = "middlename")
     private String middleName;
-
+    @Column(name = "fullname")
     private String fullName;
-
+    @Column(name = "originalregistrationdate")
     private Date originalRegistrationDate;
+    @Column(name = "updateregistrationdate")
     private Date updateRegistrationDate;
+    @Column(name = "lastintakedate")
     private Date lastIntakeDate;
+    @Column(name = "registrationcomplete")
     private boolean registrationComplete;
+    @Column(name = "phonenumber")
     private String phoneNumber;
+    @Column(name = "emailaddress")
     private String emailAddress;
     private Date dob;
 //    YearOfBirth varchar (255),
@@ -70,7 +80,7 @@ public class ClientDemographic {
         this.lastName = lastName;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
